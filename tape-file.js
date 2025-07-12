@@ -82,7 +82,7 @@ class TapeFile {
                 '[' + row.map(x => String(x).padStart(3, '0')).join(' ') + ']',
                 row.map(x => (x < 32 || x > 126) ? '.' : String.fromCharCode(x)).join(''),
                 '|',
-                formatInstruction(row)
+                this.formatInstruction(row)
             ].join(' '));
         }
 
@@ -107,7 +107,7 @@ class TapeFile {
                 if (match) {
                     const op = match[1].trim();
                     const argMatch = match[2].match(/(\d+)?.*?(\d+)?.*?(\d+)?.*?/);
-                    console.log(argMatch);
+                    console.error(argMatch);
                 }
             } else {
                 let match = line.match(/\[(\d+) (\d+) (\d+) (\d+)\]/);
@@ -120,17 +120,8 @@ class TapeFile {
             }
         }
 
-        const diff = generateDiff(program, originalLines);
+        return { program, lines };
 
-        if (diff.diffs === 0) {
-            return program;
-        } else {
-            throw new Error([
-                `Compilation failed: your program may behave inconsistently.`,
-                `Diff (${diff.diffs} lines):`,
-                ...diff.output
-            ].join('\n'));
-        }
     }
 
     static generateDiff(program, originalLines) {
@@ -139,17 +130,65 @@ class TapeFile {
         let diffs = 0;
         let output = [];
 
-        for (let i = 0; i < maxLength; i++) {
-            const newLine = newLines[i] || '';
-            const originalLine = originalLines[i] || '';
-            if (newLine !== originalLine) {
+        let aPointer = 0;
+        let bPointer = 0;
+
+        while (aPointer < newLines.length && bPointer < originalLines.length) {
+            const newLine = newLines[aPointer] || '';
+            const originalLine = originalLines[bPointer] || '';
+
+            console.error(`${aPointer} ${bPointer} ${newLine} <> ${originalLine}`);
+
+            if (originalLine.startsWith('#')) {
+                bPointer++;
+                continue;
+            }
+
+            if (newLine.trim() !== originalLine.trim()) {
                 diffs++;
-                output.push(`-${originalLine}`);
-                output.push(`+${newLine}`);
+                output.push([`-${originalLine}`, bPointer]);
+                output.push([`+${newLine}`, bPointer]);
+            } else {
+                console.error(`${newLine} === ${originalLine}`);
+            }
+
+            aPointer++;
+            bPointer++;
+        }
+
+        if (bPointer < originalLines.length) {
+            for (; bPointer < originalLines.length; bPointer++) {
+                if (originalLines[bPointer].startsWith('#')) continue;
+                output.push([`-${originalLines[bPointer]}`, bPointer]);
+                diffs++;
+            }
+        }
+
+        if (aPointer < newLines.length) {
+            for (; aPointer < newLines.length; aPointer++) {
+                output.push([`+${newLines[aPointer]}`, bPointer++]);
+                diffs++;
             }
         }
 
         return { diffs, output };
+    }
+
+    static applyDiff(program, originalLines, diff) {
+        let newLines = [...originalLines];
+        let lastLineDeleted = 0;
+
+        for (const [line, index] of diff.output) {
+            if (line.startsWith('-')) {
+                newLines.splice(index, 1);
+                lastLineDeleted = index;
+            } else if (line.startsWith('+')) {
+                newLines.splice(index, 0, line.slice(1).trim());
+                lastLineDeleted = index;
+            }
+        }
+
+        return newLines;
     }
 }
 
@@ -169,10 +208,3 @@ module.exports = { TapeFile };
     wrapped.push(`╚${border.substring(0, splitX)}╧${border.substring(splitX + 1)}╝`);
     return wrapped;
 }*/
-
-
-
-
-const dick = loadFile('example.tape', {compile: true });
-console.log('example:');
-console.log(boxwrap(format(dick)).join('\n'));

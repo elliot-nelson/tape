@@ -28,8 +28,8 @@ class TapeError extends Error {
 }
 
 class Tape {
-    constructor() {
-        this.clear();
+    constructor(program = []) {
+        this.load(program);
     }
 
     clear() {
@@ -38,12 +38,10 @@ class Tape {
         this.next = 0;
     }
 
-    loadFromFile(filename) {
-        const buffer = fs.readFileSync(filename);
-
-        for (let i = 0; i < 256; i++) {
-            const value = buffer[i] || 0;
-            this.write(i, value > 127 ? value - 256 : value);
+    load(program = []) {
+        this.clear();
+        for (let i = 0; i < program.length && i < 256; i++) {
+            this.write(i, program[i]);
         }
     }
 
@@ -70,13 +68,22 @@ class Tape {
     run(entrypoint = 0) {
         this.ip = entrypoint;
 
-        for (;;) {
-            this.next = this.ip + 4;
-            this.execute(this.ip);
+        try {
+            for (;;) {
+                this.next = this.ip + 4;
+                this.execute(this.ip);
 
-            if (this.next < 0 || this.next >= this.tape.length) {
-                break;
+                if (this.next < 0 || this.next >= this.tape.length) {
+                    break;
+                }
+
+                this.ip = this.next;
             }
+        } catch (e) {
+            if (e instanceof TapeError) {
+                console.error(this.ip);
+            }
+            throw e;
         }
     }
 
@@ -170,3 +177,49 @@ class Tape {
         }
     }
 }
+
+
+function loadFile(filename, options = {}) {
+        let lines = fs.readFileSync(filename, 'utf8').split('\n');
+        lines = lines.filter(line => line.trim().length > 0);
+
+        const program = [];
+
+        let possibleFormat = undefined;
+
+        for (const line of lines) {
+            if (options.compile) {
+                let match = line.match(/(NOP|ADD|SUB|MUL|DIV|MOD|AND|OR| NOT|XOR|NOR|END|PRN|PRS|JMP|JZ|JNZ|JS|JNS)(.+)/);
+                if (match) {
+                    const op = match[1].trim();
+                    const argMatch = match[2].match(/(\d+)?.*?(\d+)?.*?(\d+)?.*?/);
+                    console.error(argMatch);
+                }
+            } else {
+                let match = line.match(/\[(\d+) (\d+) (\d+) (\d+)\]/);
+                if (match) {
+                    program.push(Number(match[1]));
+                    program.push(Number(match[2]));
+                    program.push(Number(match[3]));
+                    program.push(Number(match[4]));
+
+                    if (possibleFormat === undefined) {
+                        if (line.indexOf('║') >= 0) {
+                            possibleFormat = 'box';
+                        } else {
+                            possibleFormat = 'text';
+                        }
+                    }
+                }
+            }
+        }
+
+        return program;
+    }
+
+
+module.exports = {
+    Tape,
+    TapeError,
+    loadFile
+};
