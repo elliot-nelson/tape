@@ -20,13 +20,16 @@ I built this to play around with low-level optimization techniques; I expect it 
 | `009`  | `XOR A B C` | `[A]` = `[B] ^ [C]`    (binary xor)                          |
 | `010`  | `NOR A B C` | `[A]` = `!([B] | [C])` (binary nor)                          |
 | `011`  | `END`       | End program                                                  |
-| `012`  | `PRN A`     | Print number at address `[A]`                                |
-| `013`  | `PRS A B`   | Print string at address `[A]` of length `B`                  |
+| `012`  | `PRN A`†    | Print number at address `[A]`                                |
+| `013`  | `PRS A B`‡  | Print string at address `[A]` of length `B`                  |
 | `014`  | `JMP A`     | Jump to address in `[A]`                                     |
 | `015`  | `JZ  A B`   | Jump to address in `[A]` if `[B] == 0`                       |
 | `016`  | `JNZ A B`   | Jump to address in `[A]` if `[B] != 0`                       |
 | `017`  | `JS  A B`   | Jump to address in `[A]` if `[B] < 0`                        |
 | `018`  | `JNS A B`   | Jump to address in `[A]` if `[B] >= 0`                       |
+
+† A "print" statement is nonsensically high-level for a machine like this, but it makes it a lot easier to play with!
+‡ This is the only instruction that takes an immediate value as an operand (B) -- all other instructions read values from addresses.
 
 ## Tape Files
 
