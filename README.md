@@ -29,6 +29,7 @@ I built this to play around with low-level optimization techniques; I expect it 
 | `018`  | `JNS A B`   | Jump to address in `[A]` if `[B] >= 0`                       |
 
 † A "print" statement is nonsensically high-level for a machine like this, but it makes it a lot easier to play with!
+
 ‡ This is the only instruction that takes an immediate value as an operand (B) -- all other instructions read values from addresses.
 
 ## Tape Files
