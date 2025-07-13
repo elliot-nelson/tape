@@ -15,7 +15,7 @@ I built this to play around with low-level optimization techniques; I expect it 
 | `004`  | `DIV A B C` | `[A]` = `[B] / [C]`                                          |
 | `005`  | `MOD A B C` | `[A]` = `[B] % [C]`    (remainder)                           |
 | `006`  | `AND A B C` | `[A]` = `[B] & [C]`    (binary and)                          |
-| `007`  | `OR  A B C` | `[A]` = `[B] | [C]`    (binary or)                           |
+| `007`  | `OR  A B C` | `[A]` = `[B] \| [C]`    (binary or)                          |
 | `008`  | `NOT A B`   | `[A]` = `![B]`         (binary not)                          |
 | `009`  | `XOR A B C` | `[A]` = `[B] ^ [C]`    (binary xor)                          |
 | `010`  | `NOR A B C` | `[A]` = `!([B] | [C])` (binary nor)                          |
