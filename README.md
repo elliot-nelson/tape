@@ -37,7 +37,7 @@ A tape file can also include comment lines, starting with `#`, which are ignored
 To run a tape program:
 
 ```
-node start.js my-program.tape
+bin/tape my-program.tape
 ```
 
 Before starting, your tape file will be _validated_, by confirming every line is consistent (all values match what would be expected at that line for that set of canonical bytes). For safety, the program will fail to start if the tape file is not well-formed, and it will print a list of incorrect lines.
@@ -45,15 +45,21 @@ Before starting, your tape file will be _validated_, by confirming every line is
 Hand-correcting a program would be extraordinarily tedious, so you can use tape to "repair" your program:
 
 ```
-node start.js -r my-program.tape > my-program2.tape
+bin/tape -r my-program.tape > my-program2.tape
 ```
 
 This will apply the diffs for you, generating a well-formed version of your original program, which you should probably check for correctness.
 
+In most cases, you can trust tape to just update your original program file:
+
+```
+bin/tape -r -u my-program.tape
+```
+
 If you are confident in your machine instruction skills and don't care about validating your program, you can also YOLO. Buyer beware.
 
 ```
-node start.js -f my-program.tape
+bin/tape -f my-program.tape
 ```
 
 ## Known issues
