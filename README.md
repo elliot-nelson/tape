@@ -78,5 +78,3 @@ If you are confident in your machine instruction skills and don't care about val
 ```
 bin/tape -f my-program.tape
 ```
-
-## Known issues
