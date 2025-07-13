@@ -107,7 +107,7 @@ class TapeFile {
                 if (match) {
                     const op = match[1].trim();
                     const argMatch = match[2].match(/(\d+)?.*?(\d+)?.*?(\d+)?.*?/);
-                    console.log(argMatch);
+                    console.error(argMatch);
                 }
             } else {
                 let match = line.match(/\[(\d+) (\d+) (\d+) (\d+)\]/);
@@ -174,5 +174,5 @@ module.exports = { TapeFile };
 
 
 const dick = loadFile('example.tape', {compile: true });
-console.log('example:');
-console.log(boxwrap(format(dick)).join('\n'));
+console.error('example:');
+console.error(boxwrap(format(dick)).join('\n'));

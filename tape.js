@@ -144,10 +144,10 @@ class Tape {
                 this.next = -1;
                 break;
             case PRN:
-                this.printNumber(this.read(a));
+                this.printNumber(a);
                 break;
             case PRS:
-                this.printString(this.read(a), this.read(b));
+                this.printString(a, b);
                 break;
             case JMP:
                 this.next = this.read(a);
@@ -173,7 +173,7 @@ class Tape {
                 }
                 break;
             default:
-                throw new TapeError(`FATAL Invalid instruction: ${opcode}`);
+                throw new TapeError(`FATAL Invalid instruction: ${String(address).padStart(4, '0')} ${opcode} ${a} ${b} ${c}`);
         }
     }
 }

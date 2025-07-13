@@ -1,4 +1,6 @@
 
+const fs = require('fs');
+
 const { Tape, TapeError } = require('./tape.js');
 const { TapeFile } = require('./tape-file.js');
 console.error('statring');
@@ -8,7 +10,8 @@ const args = process.argv.slice(2);
 let tapeFile = undefined;
 let options = {
     repair: false,
-    compile: false
+    compile: false,
+    update: false
 };
 
 for (let i = 0; i < args.length; i++) {
@@ -16,6 +19,8 @@ for (let i = 0; i < args.length; i++) {
         options.compile = true;
     } else if (args[i] === '-r') {
         options.repair = true;
+    } else if (args[i] === '-u') {
+        options.update = true;
     } else if (args[i].startsWith('-')) {
         console.error(`Unknown option: ${args[i]}`);
         process.exit(1);
@@ -36,11 +41,18 @@ const tapefile = TapeFile.loadFile(tapeFile);
 
 const diff = TapeFile.generateDiff(tapefile.program, tapefile.lines);
 
-if (diff.diffs > 0) {
+console.error(options);
+if (diff.diffs > 0 || options.repair) {
     if (options.repair) {
         console.error('Repairing tape file...');
-        console.log(TapeFile.applyDiff(tapefile.program, tapefile.lines, diff).join('\n'));;
-        console.error('Tape file repaired successfully.');
+        console.error(tapefile.program);
+        const result = TapeFile.applyDiff(tapefile.program, tapefile.lines, diff).join('\n');
+        console.log(result);
+        if (options.update) {
+            fs.writeFileSync(tapeFile, result + '\n', 'utf8');
+            console.error(`Tape file ${tapeFile} updated in place.`);
+        }
+        console.error('FUCK');
         process.exit(0);
     } else {
         throw new Error([
@@ -49,9 +61,12 @@ if (diff.diffs > 0) {
             ...diff.output
         ].join('\n'));
     }
+    console.error('what?');
 }
 
-console.log(TapeFile.formatTape(tapefile.program).join('\n'));
+console.error('somehow out of it');
+
+console.error(TapeFile.formatTape(tapefile.program).join('\n'));
 
 const tape = new Tape(tapefile.program);
 tape.run();
