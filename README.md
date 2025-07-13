@@ -6,14 +6,27 @@ I built this to play around with low-level optimization techniques; I expect it 
 
 ## Machine Instructions
 
-| Opcode | Instruction | Description                                                                                          |
-| ------ | ----------- | ---------------------------------------------------------------------------------------------------- |
-| `000`  | `NOP`       | No-Op (has no effect)                                                                                |
-| `001`  | `ADD A B C` | Add the values in addresses `B` and `C` together and store the result in address `A`.                |
-| `002`  | `SUB A B C` | Subtract the value in address `C` from the value in address `B` and store the result in address `A`. |
-| `003`  | `MUL A B C` | Multiply the values in addresses `B` and `C` together and store the result in address `A`.           |
-| `004`  | `DIV A B C` | Divide the value in address `B` by the value of address `C` and store the result in address `A`.     |
-| `004`  | `MOD A B C` | Divide the value in address `B` by the value of address `C` and store the remainder in address `A`.  |
+| Opcode | Instruction | Description                                                  |
+| ------ | ----------- | ------------------------------------------------------------ |
+| `000`  | `NOP`       | No-op (has no effect)                                        |
+| `001`  | `ADD A B C` | `[A]` = `[B] + [C]`                                          |
+| `002`  | `SUB A B C` | `[A]` = `[B] - [C]`                                          |
+| `003`  | `MUL A B C` | `[A]` = `[B] * [C]`                                          |
+| `004`  | `DIV A B C` | `[A]` = `[B] / [C]`                                          |
+| `005`  | `MOD A B C` | `[A]` = `[B] % [C]`    (remainder)                           |
+| `006`  | `AND A B C` | `[A]` = `[B] & [C]`    (binary and)                          |
+| `007`  | `OR  A B C` | `[A]` = `[B] | [C]`    (binary or)                           |
+| `008`  | `NOT A B`   | `[A]` = `![B]`         (binary not)                          |
+| `009`  | `XOR A B C` | `[A]` = `[B] ^ [C]`    (binary xor)                          |
+| `010`  | `NOR A B C` | `[A]` = `!([B] | [C])` (binary nor)                          |
+| `011`  | `END`       | End program                                                  |
+| `012`  | `PRN A`     | Print number at address `[A]`                                |
+| `013`  | `PRS A B`   | Print string at address `[A]` of length `B`                  |
+| `014`  | `JMP A`     | Jump to address in `[A]`                                     |
+| `015`  | `JZ  A B`   | Jump to address in `[A]` if `[B] == 0`                       |
+| `016`  | `JNZ A B`   | Jump to address in `[A]` if `[B] != 0`                       |
+| `017`  | `JS  A B`   | Jump to address in `[A]` if `[B] < 0`                        |
+| `018`  | `JNS A B`   | Jump to address in `[A]` if `[B] >= 0`                       |
 
 ## Tape Files
 
