@@ -1,9 +1,9 @@
 # TAPE: FizzBuzz (Version 2)
 #
-# Prints the numbers from 1-100.
-#  - Multiples of "3" print "Fizz" instead.
-#  - Multiples of "5" print "Buzz" instead.
-#  - Multiple of both print "FizzBuzz" instead.
+# Instead of conditional jumping, this version uses the
+# current count to overwrite instructions in the main loop,
+# flipping between "PRS" and "NOP" or "PRN" and "NOP", to
+# enable/disable certain printouts.
 #
 # NOP = 0
 # ADD = 1 SUB = 2 MUL = 3 DIV = 4 MOD = 5

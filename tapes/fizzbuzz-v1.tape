@@ -1,9 +1,7 @@
 # TAPE: FizzBuzz (Version 1)
 #
-# Prints the numbers from 1-100.
-#  - Multiples of "3" print "Fizz" instead.
-#  - Multiples of "5" print "Buzz" instead.
-#  - Multiple of both print "FizzBuzz" instead.
+# A straightforward port of the Basic version of FizzBuzz,
+# with a bit of data stashed at the end of the program.
 #
 # NOP = 0
 # ADD = 1 SUB = 2 MUL = 3 DIV = 4 MOD = 5
